@@ -9,6 +9,27 @@ An art museum companion for iPhone. Photograph an artwork, confirm what it is, t
 
 Docent uses **your own Claude API key**. It is stored in the device Keychain and sent only to `api.anthropic.com`; usage is billed to your Anthropic account. There is no Docent server.
 
+## Status and findings
+
+Early prototype. What has and hasn't been checked so far:
+
+| | iPhone app | Web version |
+|---|---|---|
+| Compiles | Yes, on GitHub's macOS runners (Xcode 26) | Yes (TypeScript, strict) |
+| Automated tests | 12 unit tests pass: response parsing, sentence splitting, request building, transcript export | Full flow run in a headless phone-sized browser against a faked Claude API |
+| Real Claude calls | Not yet | Not yet |
+| Run on a real phone | Not yet | Not yet |
+
+So the plumbing is verified and the experience is not: nobody has yet pointed it at a real painting with a real API key.
+
+What building it has shown so far:
+
+- **An iPhone app can be built without a Mac.** The whole project was written on Windows/Linux; GitHub Actions' macOS runners compile and test it on every push. Getting it onto a phone still needs either sideloading or TestFlight.
+- **Voice is the weak link, not the model.** Claude only handles text, so speech in and out comes from the platform (Apple's speech frameworks, or the browser's Web Speech API). Those are free and need no second key, but sound robotic and are turn-based. Dedicated speech services, or a speech-to-speech model, are the obvious next upgrade.
+- **Identification needs an honest "how sure are you".** Asking for a fixed JSON shape with a `high` / `medium` / `low` confidence and a reason, then letting the visitor correct it, is what keeps a wrong guess from turning into a confident wrong history lesson. The guide is also told how sure the identification was.
+- **Spoken answers need different writing.** The guide is instructed to answer in a few plain sentences with no lists or formatting, and replies are split into sentences so speech can start before the full answer has arrived.
+- **A browser can call Claude directly** with the visitor's own key, so the web version needs no server. That is fine for a personal prototype and not for a public product, where the key would have to move behind a backend.
+
 ## Web version
 
 `web/` is the same flow as a web page, for trying the idea on any phone or computer without installing anything: https://marshux.github.io/docent/
