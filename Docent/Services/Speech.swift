@@ -44,7 +44,7 @@ enum AudioSession {
     /// `.playAndRecord` also keeps replies audible when the ring/silent switch is on silent.
     static func configure() throws {
         let session = AVAudioSession.sharedInstance()
-        try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+        try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetoothHFP])
         try session.setActive(true, options: .notifyOthersOnDeactivation)
     }
 }

@@ -11,7 +11,9 @@ Docent uses **your own Claude API key**. It is stored in the device Keychain and
 
 ## Build and run
 
-Needs a Mac with Xcode 15.3 or later (iOS 17 SDK). The Xcode project is generated from `project.yml`:
+Every push is built and unit-tested on a macOS runner by GitHub Actions (`.github/workflows/build.yml`), so no Mac is needed to check that it compiles.
+
+To build it yourself you need a Mac with Xcode 26 or later. The Xcode project is generated from `project.yml`:
 
 ```bash
 brew install xcodegen
