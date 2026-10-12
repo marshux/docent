@@ -1,0 +1,51 @@
+# Xcode project definition. Generate Docent.xcodeproj with: xcodegen generate
+name: Docent
+options:
+  bundleIdPrefix: com.marshux
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  Docent:
+    type: application
+    platform: iOS
+    sources: [Docent]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.marshux.docent
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Support/Info.plist
+      properties:
+        CFBundleDisplayName: Docent
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSCameraUsageDescription: Docent uses the camera to photograph the artwork you want to learn about.
+        NSMicrophoneUsageDescription: Docent listens to your questions so you can talk with your guide.
+        NSSpeechRecognitionUsageDescription: Docent turns your spoken questions into text to send to your guide.
+
+  DocentTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [DocentTests]
+    dependencies:
+      - target: Docent
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Docent:
+    build:
+      targets:
+        Docent: all
+    test:
+      targets: [DocentTests]

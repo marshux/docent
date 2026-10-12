@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Pick an iPhone simulator
+        run: |
+          xcodebuild -version
+          udid=$(xcrun simctl list devices available --json | python3 -c "
+          import json, sys
+          runtimes = json.load(sys.stdin)['devices']
+          print(next(d['udid'] for name in sorted(runtimes, reverse=True) if 'iOS' in name
+                     for d in runtimes[name] if d['name'].startswith('iPhone')))")
+          echo "SIM_UDID=$udid" >> "$GITHUB_ENV"
+
+      - name: Build
+        run: >
+          xcodebuild build-for-testing -quiet
+          -project Docent.xcodeproj -scheme Docent
+          -destination "id=$SIM_UDID"
+          CODE_SIGNING_ALLOWED=NO
+
+      - name: Test
+        run: >
+          xcodebuild test-without-building
+          -project Docent.xcodeproj -scheme Docent
+          -destination "id=$SIM_UDID"
+          CODE_SIGNING_ALLOWED=NO
