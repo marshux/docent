@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1c1a17" />
+    <title>Docent</title>
+    <meta name="description" content="An art museum companion: photograph an artwork and talk with a guide about its history." />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">Docent</span>
+      <button id="open-settings" class="icon-button" type="button" aria-label="Settings" hidden>Settings</button>
+    </header>
+
+    <main>
+      <!-- 0. API key -->
+      <section id="screen-setup" class="screen" hidden>
+        <h1>Welcome to Docent</h1>
+        <p>Photograph an artwork, then talk with a guide about its history.</p>
+        <form id="key-form" class="stack">
+          <label for="key-input">Your Claude API key</label>
+          <input id="key-input" type="password" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" spellcheck="false" required />
+          <button class="primary" type="submit">Save key</button>
+        </form>
+        <p class="note">
+          Docent runs on your own key, so usage is billed to your Anthropic account. The key is kept in this
+          browser's storage on this device and sent only to api.anthropic.com. Create one at console.anthropic.com.
+        </p>
+      </section>
+
+      <!-- 1. Photo -->
+      <section id="screen-capture" class="screen" hidden>
+        <h1>What are you looking at?</h1>
+        <p>Add a photo of the artwork. Including the wall label in the frame gives a more certain match.</p>
+        <div class="stack">
+          <label for="title-hint">Title, if you know it <span class="optional">(optional)</span></label>
+          <input id="title-hint" type="text" autocomplete="off" />
+          <label class="primary file-button" for="photo-input">Take or choose a photo</label>
+          <input id="photo-input" class="visually-hidden" type="file" accept="image/*" />
+        </div>
+        <p id="capture-status" class="status" role="status" hidden>Identifying the artwork…</p>
+      </section>
+
+      <!-- 2. Confirm -->
+      <section id="screen-confirm" class="screen" hidden>
+        <h1>Is this right?</h1>
+        <img id="confirm-photo" class="photo" alt="Your photo of the artwork" />
+        <p id="confidence-badge" class="badge"></p>
+        <p id="confidence-reason" class="note"></p>
+        <form id="confirm-form" class="stack">
+          <label for="art-title">Title</label>
+          <input id="art-title" type="text" required />
+          <label for="art-artist">Artist</label>
+          <input id="art-artist" type="text" />
+          <div class="row">
+            <div>
+              <label for="art-year">Year</label>
+              <input id="art-year" type="text" />
+            </div>
+            <div>
+              <label for="art-medium">Medium</label>
+              <input id="art-medium" type="text" />
+            </div>
+          </div>
+          <div id="alternatives" hidden>
+            <p class="label">It could also be</p>
+            <div id="alternatives-list" class="stack"></div>
+          </div>
+          <button class="primary" type="submit">Start conversation</button>
+          <button id="retake" class="secondary" type="button">Use a different photo</button>
+        </form>
+      </section>
+
+      <!-- 3. Conversation -->
+      <section id="screen-chat" class="screen chat" hidden>
+        <div class="chat-head">
+          <div>
+            <h1 id="chat-title"></h1>
+            <p id="chat-subtitle" class="note"></p>
+          </div>
+          <div class="chat-actions">
+            <button id="toggle-voice" class="secondary small" type="button">Mute</button>
+            <button id="export" class="secondary small" type="button">Export</button>
+            <button id="new-artwork" class="secondary small" type="button">New</button>
+          </div>
+        </div>
+        <ol id="messages" class="messages" aria-live="polite"></ol>
+        <div class="composer">
+          <p id="heard" class="heard" hidden></p>
+          <button id="mic" class="mic" type="button" aria-label="Ask a question out loud">
+            <span id="mic-label">Tap to talk</span>
+          </button>
+          <p id="mic-unsupported" class="note" hidden>This browser has no speech recognition. Type your question instead.</p>
+          <form id="ask-form" class="ask">
+            <input id="ask-input" type="text" placeholder="Or type a question" autocomplete="off" aria-label="Type a question" />
+            <button class="primary" type="submit">Send</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="settings">
+      <form method="dialog" class="stack">
+        <h2>Settings</h2>
+        <label for="model-select">Model</label>
+        <select id="model-select"></select>
+        <p id="model-detail" class="note"></p>
+        <label class="check"><input id="speak-toggle" type="checkbox" /> Read answers aloud</label>
+        <button id="remove-key" class="danger" type="button">Remove API key from this browser</button>
+        <button class="primary" type="submit">Done</button>
+      </form>
+    </dialog>
+
+    <p id="error" class="error" role="alert" hidden></p>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

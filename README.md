@@ -9,7 +9,17 @@ An art museum companion for iPhone. Photograph an artwork, confirm what it is, t
 
 Docent uses **your own Claude API key**. It is stored in the device Keychain and sent only to `api.anthropic.com`; usage is billed to your Anthropic account. There is no Docent server.
 
-## Build and run
+## Web version
+
+`web/` is the same flow as a web page, for trying the idea on any phone or computer without installing anything: https://marshux.github.io/docent/
+
+It uses the browser's own speech recognition and speech synthesis, and a photo upload (on a phone, the file picker offers the camera). Voice input needs Chrome, Edge or Safari; other browsers fall back to typing. Your API key is kept in that browser's storage. It is a TypeScript + Vite app using the official `@anthropic-ai/sdk`, deployed to GitHub Pages on every push that touches `web/`.
+
+```bash
+cd web && npm install && npm run dev
+```
+
+## Build and run (iPhone app)
 
 Every push is built and unit-tested on a macOS runner by GitHub Actions (`.github/workflows/build.yml`), so no Mac is needed to check that it compiles.
 
